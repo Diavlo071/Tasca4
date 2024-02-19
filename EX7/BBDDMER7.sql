@@ -1,0 +1,118 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema MER7
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema MER7
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `MER7` ;
+USE `MER7` ;
+
+-- -----------------------------------------------------
+-- Table `MER7`.`EMPLEAT`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MER7`.`EMPLEAT` (
+  `ID` INT NOT NULL,
+  `DNI` VARCHAR(9) NULL,
+  `NOM` VARCHAR(45) NULL,
+  `COGNOM` VARCHAR(45) NULL,
+  `DIRECCIO` VARCHAR(100) NULL,
+  `TELEFON` VARCHAR(9) NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MER7`.`CLIENT`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MER7`.`CLIENT` (
+  `ID` INT NOT NULL,
+  `DNI` VARCHAR(9) NULL,
+  `NOM` VARCHAR(45) NULL,
+  `COGNOM` VARCHAR(45) NULL,
+  `TELEFON` VARCHAR(45) NULL,
+  `DIRECCIO` VARCHAR(45) NULL,
+  `EMAIL` VARCHAR(100) NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MER7`.`TICKET`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MER7`.`TICKET` (
+  `ID` INT NOT NULL,
+  `NUM_FACTURA` VARCHAR(45) NULL,
+  `NOM_EPRESA` VARCHAR(45) NULL,
+  `NIF` VARCHAR(9) NULL,
+  `DOMICILI_FISCAL` VARCHAR(45) NULL,
+  `TELEFON` VARCHAR(45) NULL,
+  `WEB` VARCHAR(100) NULL,
+  `CORREU` VARCHAR(100) NULL,
+  `DATA` DATE NULL,
+  `FORMA_PAGAMENT` VARCHAR(45) NULL,
+  `EMPLEAT_ID` INT NOT NULL,
+  `CLIENT_ID` INT NOT NULL,
+  PRIMARY KEY (`ID`),
+  INDEX `fk_TICKET_EMPLEAT_idx` (`EMPLEAT_ID` ASC) VISIBLE,
+  INDEX `fk_TICKET_CLIENT1_idx` (`CLIENT_ID` ASC) VISIBLE,
+  CONSTRAINT `fk_TICKET_EMPLEAT`
+    FOREIGN KEY (`EMPLEAT_ID`)
+    REFERENCES `MER7`.`EMPLEAT` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_TICKET_CLIENT1`
+    FOREIGN KEY (`CLIENT_ID`)
+    REFERENCES `MER7`.`CLIENT` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MER7`.`PRODUCTE`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MER7`.`PRODUCTE` (
+  `ID` INT NOT NULL,
+  `NOM` VARCHAR(45) NULL,
+  `DESCRIPCIO` VARCHAR(45) NULL,
+  `IVA` VARCHAR(45) NULL,
+  `PREU` VARCHAR(45) NULL,
+  PRIMARY KEY (`ID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `MER7`.`LINIA_TICKET`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `MER7`.`LINIA_TICKET` (
+  `ID` INT NOT NULL,
+  `QUANTITAT` INT NULL,
+  `DESCOMPTE` VARCHAR(45) NULL,
+  `TICKET_ID` INT NOT NULL,
+  `PRODUCTE_ID` INT NOT NULL,
+  PRIMARY KEY (`ID`),
+  INDEX `fk_LINIA_TICKET_TICKET1_idx` (`TICKET_ID` ASC) VISIBLE,
+  INDEX `fk_LINIA_TICKET_PRODUCTE1_idx` (`PRODUCTE_ID` ASC) VISIBLE,
+  CONSTRAINT `fk_LINIA_TICKET_TICKET1`
+    FOREIGN KEY (`TICKET_ID`)
+    REFERENCES `MER7`.`TICKET` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_LINIA_TICKET_PRODUCTE1`
+    FOREIGN KEY (`PRODUCTE_ID`)
+    REFERENCES `MER7`.`PRODUCTE` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
